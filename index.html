@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AI Candidate</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f7fb;
+            height: 100vh;
+        }
+
+
+        .app {
+            display: flex;
+            height: 100vh;
+        }
+
+
+        /* -------------------------
+   Sidebar
+------------------------- */
+
+        .sidebar {
+            width: 280px;
+            background: #111827;
+            color: white;
+            padding: 30px 20px;
+
+            display: flex;
+            flex-direction: column;
+        }
+
+
+        .profile {
+            text-align: center;
+        }
+
+
+        .avatar {
+            width: 70px;
+            height: 70px;
+
+            border-radius: 50%;
+
+            background: #4f46e5;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 22px;
+            font-weight: bold;
+
+            margin: auto;
+        }
+
+
+        .profile h2 {
+            margin-top: 15px;
+        }
+
+
+        .profile p {
+            margin-top: 6px;
+
+            color: #9ca3af;
+
+            font-size: 14px;
+        }
+
+
+        .sidebar-info {
+            margin-top: 40px;
+        }
+
+
+        .info-card {
+            display: flex;
+
+            gap: 12px;
+
+            padding: 14px 10px;
+
+            border-bottom: 1px solid #374151;
+        }
+
+
+        .info-card span {
+            font-size: 20px;
+        }
+
+
+        .info-card small {
+            color: #9ca3af;
+        }
+
+
+        .info-card p {
+            margin-top: 3px;
+
+            font-size: 14px;
+        }
+
+
+        .sidebar-bottom {
+            margin-top: auto;
+
+            color: #9ca3af;
+
+            font-size: 13px;
+
+            line-height: 1.6;
+        }
+
+
+        /* -------------------------
+   Chat
+------------------------- */
+
+        .chat-container {
+            flex: 1;
+
+            display: flex;
+
+            flex-direction: column;
+
+            background: white;
+        }
+
+
+        /* Header */
+
+        .chat-header {
+            padding: 22px 30px;
+
+            border-bottom: 1px solid #e5e7eb;
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+        }
+
+
+        .chat-header h1 {
+            font-size: 22px;
+        }
+
+
+        .chat-header p {
+            margin-top: 5px;
+
+            color: #6b7280;
+
+            font-size: 14px;
+        }
+
+
+        .status {
+            color: #16a34a;
+
+            font-size: 14px;
+        }
+
+
+        .status-dot {
+            display: inline-block;
+
+            width: 8px;
+            height: 8px;
+
+            background: #22c55e;
+
+            border-radius: 50%;
+
+            margin-right: 5px;
+        }
+
+
+        /* Messages */
+
+        .messages {
+            flex: 1;
+
+            overflow-y: auto;
+
+            padding: 30px;
+
+            max-width: 900px;
+
+            width: 100%;
+
+            margin: auto;
+        }
+
+
+        .message {
+            display: flex;
+
+            gap: 12px;
+
+            margin-bottom: 25px;
+
+            max-width: 750px;
+        }
+
+
+        .message-avatar {
+            width: 38px;
+            height: 38px;
+
+            border-radius: 50%;
+
+            background: #4f46e5;
+
+            color: white;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            font-size: 12px;
+
+            flex-shrink: 0;
+        }
+
+
+        .message-content {
+            background: #f3f4f6;
+
+            padding: 15px 18px;
+
+            border-radius: 12px;
+
+            line-height: 1.6;
+
+            color: #1f2937;
+        }
+
+
+        .message-content p {
+            margin-bottom: 8px;
+        }
+
+
+        .message-content p:last-child {
+            margin-bottom: 0;
+        }
+
+
+        /* User message */
+
+        .user-message {
+            margin-left: auto;
+
+            flex-direction: row-reverse;
+        }
+
+
+        .user-message .message-avatar {
+            background: #111827;
+        }
+
+
+        .user-message .message-content {
+            background: #4f46e5;
+
+            color: white;
+        }
+
+
+        /* Suggestions */
+
+        .suggestions {
+            display: flex;
+
+            flex-wrap: wrap;
+
+            gap: 10px;
+
+            margin-left: 50px;
+
+            margin-bottom: 30px;
+        }
+
+
+        .suggestions button {
+            border: 1px solid #d1d5db;
+
+            background: white;
+
+            padding: 10px 15px;
+
+            border-radius: 20px;
+
+            cursor: pointer;
+
+            font-size: 13px;
+        }
+
+
+        .suggestions button:hover {
+            background: #f3f4f6;
+        }
+
+
+        /* Loading */
+
+        .loading {
+            margin-left: 30px;
+
+            margin-bottom: 10px;
+
+            color: #6b7280;
+
+            font-size: 14px;
+        }
+
+
+        .loading span {
+            display: inline-block;
+
+            width: 7px;
+            height: 7px;
+
+            background: #6b7280;
+
+            border-radius: 50%;
+
+            margin-right: 3px;
+        }
+
+
+        .hidden {
+            display: none;
+        }
+
+
+        /* -------------------------
+   Input
+------------------------- */
+
+        .input-area {
+            border-top: 1px solid #e5e7eb;
+
+            padding: 18px 30px;
+        }
+
+
+        .input-wrapper {
+            display: flex;
+
+            max-width: 900px;
+
+            margin: auto;
+
+            gap: 10px;
+        }
+
+
+        .input-wrapper input {
+            flex: 1;
+
+            padding: 15px;
+
+            border: 1px solid #d1d5db;
+
+            border-radius: 10px;
+
+            outline: none;
+
+            font-size: 15px;
+        }
+
+
+        .input-wrapper input:focus {
+            border-color: #4f46e5;
+        }
+
+
+        .input-wrapper button {
+            border: none;
+
+            background: #4f46e5;
+
+            color: white;
+
+            padding: 0 25px;
+
+            border-radius: 10px;
+
+            cursor: pointer;
+
+            font-size: 15px;
+        }
+
+
+        .input-wrapper button:hover {
+            background: #4338ca;
+        }
+
+
+        .input-wrapper button:disabled {
+            background: #9ca3af;
+
+            cursor: not-allowed;
+        }
+
+
+        .input-note {
+            text-align: center;
+
+            color: #9ca3af;
+
+            font-size: 12px;
+
+            margin-top: 8px;
+        }
+
+
+        /* -------------------------
+   Mobile
+------------------------- */
+
+        @media (max-width: 700px) {
+
+            .sidebar {
+                display: none;
+            }
+
+            .chat-header {
+                padding: 18px;
+            }
+
+            .messages {
+                padding: 20px;
+            }
+
+            .input-area {
+                padding: 15px;
+            }
+
+            .suggestions {
+                margin-left: 0;
+            }
+
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div class="app">
+
+        <!-- Sidebar -->
+
+        <aside class="sidebar">
+
+            <div class="profile">
+
+                <div class="avatar">
+                    SP
+                </div>
+
+                <h2>AI Candidate</h2>
+
+                <p>Software Engineering Student</p>
+
+            </div>
+
+
+            <div class="sidebar-info">
+
+                <div class="info-card">
+
+                    <span>💼</span>
+
+                    <div>
+                        <small>Role</small>
+                        <p>Software Engineer</p>
+                    </div>
+
+                </div>
+
+
+                <div class="info-card">
+
+                    <span>🤖</span>
+
+                    <div>
+                        <small>Powered by</small>
+                        <p>Groq AI</p>
+                    </div>
+
+                </div>
+
+
+                <div class="info-card">
+
+                    <span>📄</span>
+
+                    <div>
+                        <small>Knowledge</small>
+                        <p>Resume</p>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="sidebar-bottom">
+
+                <p>
+                    Ask questions about my
+                    skills, projects, education
+                    and experience.
+                </p>
+
+            </div>
+
+        </aside>
+
+
+        <!-- Main Chat -->
+
+        <main class="chat-container">
+
+
+            <!-- Header -->
+
+            <header class="chat-header">
+
+                <div>
+
+                    <h1>Chat with my AI</h1>
+
+                    <p>
+                        Ask me anything about my
+                        professional background
+                    </p>
+
+                </div>
+
+
+                <div class="status">
+
+                    <span class="status-dot"></span>
+
+                    Online
+
+                </div>
+
+            </header>
+
+
+            <!-- Messages -->
+
+            <section class="messages" id="messages">
+
+                <!-- Welcome message -->
+
+                <div class="message ai-message">
+
+                    <div class="message-avatar">
+                        AI
+                    </div>
+
+                    <div class="message-content">
+
+                        <p>
+                            Hi! 👋 I'm an AI assistant
+                            representing the candidate.
+                        </p>
+
+                        <p>
+                            You can ask me about skills,
+                            projects, education,
+                            experience, or certifications.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Suggested questions -->
+
+                <div class="suggestions">
+
+                    <button onclick="askSuggestion(this)">
+                        What are your skills?
+                    </button>
+
+                    <button onclick="askSuggestion(this)">
+                        Tell me about your projects.
+                    </button>
+
+                    <button onclick="askSuggestion(this)">
+                        What is your education?
+                    </button>
+
+                    <button onclick="askSuggestion(this)">
+                        Tell me about your experience.
+                    </button>
+
+                </div>
+
+            </section>
+
+
+            <!-- Loading -->
+
+            <div id="loading" class="loading hidden">
+
+                <span></span>
+                <span></span>
+                <span></span>
+
+                AI is thinking...
+
+            </div>
+
+
+            <!-- Input -->
+
+            <footer class="input-area">
+
+                <div class="input-wrapper">
+
+                    <input type="text" id="userInput" placeholder="Ask something about the candidate..."
+                        autocomplete="off">
+
+                    <button id="sendButton" onclick="sendMessage()">
+
+                        Send
+
+                    </button>
+
+                </div>
+
+                <p class="input-note">
+                    Press Enter to send
+                </p>
+
+            </footer>
+
+
+        </main>
+
+    </div>
+
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>
